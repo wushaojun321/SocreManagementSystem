@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    return "Hello world1"
+    return "Hello world2"
 
 @app.route("/deploy", methods=["POST"])
 def deploy():
