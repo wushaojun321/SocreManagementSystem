@@ -1,4 +1,3 @@
 .direnv
 *.md
 .envrc
-__pycache__
