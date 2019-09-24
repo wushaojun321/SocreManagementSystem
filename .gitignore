@@ -2,3 +2,10 @@
 *.md
 .envrc
 __pycache__
+test
+migrations
+*.md
+*.txt
+.idea/*
+*.db
+*.pyc
