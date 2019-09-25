@@ -1,5 +1,6 @@
 class Config:
-    SQLALCHEMY_DATABASE_URI = 'sqlite:////Users/wsj/project/ScoreManagementSystem/app.db'
+    # SQLALCHEMY_DATABASE_URI = 'sqlite:////Users/wsj/project/ScoreManagementSystem/app.db'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:////home/wsj/ScoreManagementSystem/app.db'
     # 自动保存开启
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     HOST = '0.0.0.0'

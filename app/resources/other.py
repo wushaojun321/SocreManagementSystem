@@ -1,6 +1,6 @@
 import uuid
 
-from flask_restful import Resource, reqparse, abort
+from flask_restful import Resource, reqparse
 from flask import request, g
 
 from libs import non_empty_string, password_string
@@ -39,10 +39,10 @@ class TokenView(Resource):
         args = parser.parse_args()
         teachers = TeacherModel.query.filter_by(username=args["username"])
         if teachers.count() != 1:
-            abort(404, message="can't find this user", status="failed")
+            return {"status": "failed", "message": "can't find this user"}
         teacher = teachers.first()
         if args["password"] != teacher.password:
-            abort(403, message="password is not correct!", status="failed")
+            return {"status": "failed", "message": "password is not correct!"}
         token = TokenModel.query.filter_by(teacher_id=teacher.id, is_delete=False).first()
         if token:
             value = token.value

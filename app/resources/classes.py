@@ -1,4 +1,4 @@
-from flask_restful import Resource, abort, reqparse
+from flask_restful import Resource, reqparse
 
 from app.models.classes import ClassModel
 from app import auth, db
@@ -23,7 +23,7 @@ class ClassListView(Resource):
         args = parser.parse_args()
         _class = ClassModel.query.filter_by(name=args["class_name"]).first()
         if _class:
-            abort(403, status="failed", message="此班级已经存在")
+            return {"status": "failed", "message": "此班级已经存在"}
         new_class = ClassModel(name=args["class_name"], info=args["info"])
         db.session.add(new_class)
         db.session.commit()
@@ -37,7 +37,7 @@ class ClassView(Resource):
         """返回班级以及班级的所有学生"""
         _class = ClassModel.query.get(class_id)
         if not _class:
-            abort(404, status="failed", message="班级不存在")
+            return {"status": "failed", "message": "班级不存在"}
         data = _class.to_show_detail()
         return {"status": "ok", "data": data}
 
@@ -46,7 +46,7 @@ class ClassView(Resource):
         """返回班级以及班级的所有学生"""
         _class = ClassModel.query.get(class_id)
         if not _class:
-            abort(404, status="failed", message="班级不存在")
+            return {"status": "failed", "message": "班级不存在"}
         db.session.delete(_class)
         db.session.commit()
         return {"status": "ok"}

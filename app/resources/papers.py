@@ -1,4 +1,4 @@
-from flask_restful import Resource, abort, reqparse
+from flask_restful import Resource, reqparse
 from flask import g
 
 from app.models.papers import PaperModel, QuestionModel
@@ -25,7 +25,7 @@ class PaperListView(Resource):
         parser.add_argument("questions", required=True, nullable=False, type=int, action="append")
         args = parser.parse_args()
         if PaperModel.query.filter_by(name=args["paper_name"]).first():
-            abort(403, status="failed", message="试卷已经存在")
+            return {"status": "failed", "status": "试卷已经存在"}
         if sum(args["questions"]) != args["sum_score"]:
             return {"status": "failed", "message": "各题目总分必须与总分相等"}
 

@@ -1,4 +1,4 @@
-from flask_restful import Resource, reqparse, abort
+from flask_restful import Resource, reqparse
 
 from app.models.student import StudentModel
 from app.models.classes import ClassModel
@@ -23,7 +23,8 @@ class StudentListView(Resource):
         parser.add_argument("student_class_id", required=True, nullable=False, type=int)
         args = parser.parse_args()
         if not ClassModel.query.get(args["student_class_id"]):
-            abort(403, status="failed", message="此班级不存在")
+            return {"status": "failed", "message": "此班级不存在"}
+
         if StudentModel.query.filter_by(student_id=args["student_id"]).count() > 0:
             return {"status": "failed", "message": "此学号已经存在"}
         new_student = StudentModel(name=args["name"], student_id=args["student_id"],
@@ -48,7 +49,7 @@ class StudentView(Resource):
     def delete(self, _id):
         student = StudentModel.query.get(_id)
         if not student:
-            abort(403, status="failed", message="学生不存在")
+            return {"status": "failed", "message": "学生不存在"}
         db.session.delete(student)
         db.session.commit()
         return {"status": "ok"}

@@ -1,5 +1,5 @@
 from flask import g
-from flask_restful import Resource, abort, reqparse
+from flask_restful import Resource, reqparse
 
 
 from app import db, auth
@@ -12,7 +12,8 @@ class TeacherListView(Resource):
     @auth.login_required
     def get(self):
         if g.user.username != "admin":
-            abort(403, message="没有权限", status="failed")
+            return {"status": "failed", "message": "没有权限"}
+
         teachers = TeacherModel.query.all()
         res = [t.to_show() for t in teachers]
         return {"status": "ok", "data": res}
@@ -20,7 +21,8 @@ class TeacherListView(Resource):
     @auth.login_required
     def post(self):
         if g.user.username != "admin":
-            abort(403, message="没有权限", status="failed")
+            return {"status": "failed", "message": "没有权限"}
+
         parser = reqparse.RequestParser()
         parser.add_argument("name", required=True, nullable=False, type=non_empty_string)
         parser.add_argument("username", required=True, nullable=False, type=non_empty_string)
@@ -29,7 +31,8 @@ class TeacherListView(Resource):
         args = parser.parse_args()
         teachers = TeacherModel.query.filter_by(username=args["username"])
         if teachers.count() > 0:
-            abort(403, message="username already exists", status="failed")
+            return {"status": "failed", "message": "username already exists"}
+
         new_teacher = TeacherModel(name=args["name"], username=args["username"],
                                    password=args["password"])
 
@@ -42,17 +45,20 @@ class TeacherView(Resource):
     def get(self, teacher_id):
         teacher = TeacherModel.query.get(teacher_id)
         if not teacher:
-            abort(404, message="teacher {} doesn't exist".format(teacher_id), status="failed")
+            return {"status": "failed", "message": "teacher {} doesn't exist".format(teacher_id)}
+
         else:
             return teacher.to_show()
 
     @auth.login_required
     def delete(self, teacher_id):
         if g.user.username != "admin":
-            abort(403, message="没有权限", status="failed")
+            return {"status": "failed", "message": "没有权限"}
+
         teacher = TeacherModel.query.get(teacher_id)
         if not teacher:
-            abort(404)
+            return {"status": "failed", "message": "老师不存在"}
+
         if teacher.username == "admin":
             return {"status": "failed", "message": "不能删除admin"}
         TokenModel.delete_teacher(teacher.id)
