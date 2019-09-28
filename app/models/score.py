@@ -39,4 +39,8 @@ class ScoreModel(db.Model):
             df.loc[cur_index, score.question.question_num] = score.points
         df.sort_index(by=["class_name", "student_id"])
         df.index = range(df.shape[0])
-        return df.T.to_dict()
+        res_dict = df.T.to_dict()
+        res_list = [0 for i in range(len(res_dict))]
+        for k, v in res_dict.items():
+            res_list[k] = v
+        return res_list
