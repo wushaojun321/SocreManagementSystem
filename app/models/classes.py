@@ -12,7 +12,13 @@ class ClassModel(db.Model):
     info = db.Column(db.Text)
 
     def to_show(self):
-        res = {"id": self.id, "class_name": self.name, "info": self.info}
+        students = self.get_all_students()
+        res = {
+            "id": self.id,
+            "class_name": self.name,
+            "student_count": students.count(),
+            "info": self.info
+        }
         return res
 
     def get_all_students(self):

@@ -19,8 +19,19 @@ class PaperModel(db.Model):
     scores = db.relationship('ScoreModel', backref='paper', lazy='dynamic')
 
     def to_show(self):
-        return {"id": self.id, "name": self.name, "exam_date": self.exam_date.strftime('%Y-%m-%d'), "sum_score": self.sum_score,
-                "teacher_name": self.teacher.name, "info": self.info}
+        return {
+            "id": self.id,
+            "name": self.name,
+            "exam_date": self.exam_date.strftime('%Y-%m-%d'),
+            "sum_score": self.sum_score,
+            "teacher_name": self.teacher.name,
+            "question_count": self.get_question_count(),
+            "info": self.info
+        }
+
+    def get_question_count(self):
+        questions = self.get_all_question()
+        return questions.count()
 
     def to_show_detail(self):
         res = self.to_show()

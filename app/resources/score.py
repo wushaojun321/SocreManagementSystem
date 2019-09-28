@@ -11,9 +11,11 @@ from libs import non_empty_string
 class PaperScoreView(Resource):
 
     @auth.login_required
-    def get(self):
-        papers = PaperModel.query.filter_by(teacher_id=g.user.id)
-        data = [paper.to_show_score() for paper in papers]
+    def get(self, paper_id):
+        paper = PaperModel.query.get(paper_id)
+        if not paper:
+            return {"status": "failed", "message": "没有这张试卷"}
+        data = ScoreModel.get_score_detail(paper)
         return {"status": "ok", "data": data}
 
     @auth.login_required

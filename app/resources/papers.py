@@ -10,7 +10,10 @@ class PaperListView(Resource):
     @auth.login_required
     def get(self):
         """返回登陆的老师的所有的试卷的简单信息"""
-        papers = PaperModel.query.all()
+        if g.user.username == 'admin':
+            papers = PaperModel.query.all()
+        else:
+            papers = PaperModel.query.filter_by(teacher_id=g.user.id)
         data = [paper.to_show() for paper in papers]
         return {"status": "ok", "data": data}
 

@@ -16,4 +16,4 @@ def router_init():
     api.add_resource(ClassView, '/class/<int:class_id>')
     api.add_resource(StudentListView, '/studentList')
     api.add_resource(StudentView, '/student/<int:id>')
-    api.add_resource(PaperScoreView, '/paperScore')
+    api.add_resource(PaperScoreView, '/paperScore/<int:paper_id>')
