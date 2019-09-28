@@ -33,7 +33,7 @@ class PaperScoreView(Resource):
         if not paper:
             return {"status": "failed", "message": "找不到这个试卷"}
 
-        student = StudentModel.query.get(student_id)
+        student = StudentModel.query.filter_by(student_id=student_id).first()
         if not student:
             return {"status": "failed", "message": "找不到这个学生"}
 
@@ -48,12 +48,12 @@ class PaperScoreView(Resource):
 
         for question, score in zip(questions, scores):
             exist_score = ScoreModel.query.filter_by(question_id=question.id,
-                                                     paper_id=paper_id, student_id=student_id).first()
+                                                     paper_id=paper_id, student_id=student.id).first()
             if exist_score:
                 exist_score.points = score
                 db.session.add(exist_score)
             else:
-                new_score = ScoreModel(question_id=question.id, paper_id=paper_id, student_id=student_id, points=score)
+                new_score = ScoreModel(question_id=question.id, paper_id=paper_id, student_id=student.id, points=score)
                 db.session.add(new_score)
         db.session.commit()
         return {"status": "ok", "message": "添加成功"}
