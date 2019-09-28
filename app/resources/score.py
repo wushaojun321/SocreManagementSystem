@@ -20,7 +20,6 @@ class PaperScoreView(Resource):
 
     @auth.login_required
     def post(self):
-        """增加一张试卷"""
         parser = reqparse.RequestParser()
         parser.add_argument("paper_id", required=True, nullable=False, type=non_empty_string)
         parser.add_argument("student_id", required=True, nullable=False, type=non_empty_string)
@@ -44,7 +43,7 @@ class PaperScoreView(Resource):
         for question, score in zip(questions, scores):
             if score > question.score_in_paper:
                 return {"status": "failed", "message": "第%s道题的分值为%s分,您传入的为%s分" %
-                                                    (question.question_num, question.score_in_paper, score)}
+                                                    (question.question_num+1, question.score_in_paper, score)}
 
         for question, score in zip(questions, scores):
             exist_score = ScoreModel.query.filter_by(question_id=question.id,
