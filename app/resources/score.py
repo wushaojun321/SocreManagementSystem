@@ -19,7 +19,7 @@ class PaperScoreView(Resource):
         return {"status": "ok", "data": data}
 
     @auth.login_required
-    def post(self):
+    def post(self, paper_id):
         parser = reqparse.RequestParser()
         parser.add_argument("paper_id", required=True, nullable=False, type=non_empty_string)
         parser.add_argument("student_id", required=True, nullable=False, type=non_empty_string)
