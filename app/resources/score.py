@@ -21,12 +21,10 @@ class PaperScoreView(Resource):
     @auth.login_required
     def post(self, paper_id):
         parser = reqparse.RequestParser()
-        parser.add_argument("paper_id", required=True, nullable=False, type=non_empty_string)
         parser.add_argument("student_id", required=True, nullable=False, type=non_empty_string)
         parser.add_argument("scores", required=True, nullable=False, type=int, action="append")
         args = parser.parse_args()
         scores = args["scores"]
-        paper_id = args["paper_id"]
         student_id = args["student_id"]
         paper = PaperModel.query.get(paper_id)
         if not paper:
